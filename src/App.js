@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import './App.css';
+import './App.scss';
 
 // App Components
 import SearchPokemon from './components/SearchPokemon.js';
+import DisplayPokemon from './components/DisplayPokemon/DisplayPokemon.js'; 
 
 
 class App extends Component {
@@ -20,17 +21,9 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>Welcome to the Great World of Pokemon</h1>
+        <h1>Pokemon</h1>
         <SearchPokemon onPokemonChange={this.onPokemonChange} />
-        {!!pokemon && (
-          <div>
-            <h1>
-              { pokemon.name }
-            </h1>
-            <img alt="pokemon species" src={pokemon.sprites.front_female} />
-            <p>Height: { pokemon.height }</p>
-          </div>
-        )}
+        <DisplayPokemon pokemon={pokemon}/>
       </div>
     );
   }

@@ -3,15 +3,11 @@ import PropTypes from "prop-types"
 
 
 class SearchPokemon extends React.Component {
-    constructor() {
-      super();
-
-      this.onSearchPokemon = this.onSearchPokemon.bind(this);
-      this.state = {
-        search: '',
-        error: false,
-      };
-    }
+  
+    state = {
+      search: '',
+      error: false,
+    };
 
     static propTypes = {
       onPokemonChange: PropTypes.func,
@@ -21,12 +17,19 @@ class SearchPokemon extends React.Component {
       const value = e.target.value
       this.setState({ search: value, error: false })
     }
-
-    onSearchPokemon(e) {
+ 
+    onSearchPokemon = e => {
       e.preventDefault();
+    
+
+      if (!this.state.search.trim()) {
+        this.setState({ error: "You must enter a pokemon to search"});
+      }
       this.setState({ error: false })
 
-      const url = fetch(`http://pokeapi.co/api/v2/pokemon/${this.state.search}`);
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+
+      const url = fetch(proxyUrl + `http://pokeapi.co/api/v2/pokemon/${this.state.search}`);
 
       url
       .then(response => {
@@ -35,10 +38,10 @@ class SearchPokemon extends React.Component {
       })
       .then(responseData => {
         this.props.onPokemonChange(responseData);
+        console.log(responseData);
       })
       .catch(() => {
         this.setState({ error: true })
-
       })
     }
 
@@ -47,12 +50,8 @@ class SearchPokemon extends React.Component {
         <form>
           <input type="text" value={this.state.search} onChange={this.setSearchValue}></input>
           <button type="submit" onClick={this.onSearchPokemon}>Search</button>
-
-          {this.state.error && (
-            <div>Something went wrong</div>
-          )}
+          <span style={{color: "red", display: "block"}}>{this.state.error}</span>
         </form>
-
       );
     }
   }
